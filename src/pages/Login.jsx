@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Card,
+  CircularProgress,
   InputAdornment,
   TextField,
   Typography,
@@ -15,16 +16,26 @@ import {
   LockOutlined,
 } from "@mui/icons-material";
 import { Controller, useForm } from "react-hook-form";
+import { useLogin, useUser } from "../hooks/useAuth";
+import { Navigate } from "react-router-dom";
 
 const Login = () => {
+  const user = useUser();
+
+  if (user) {
+    return <Navigate to="/" />;
+  }
+
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({});
 
+  const { mutate, isLoading, isError, error } = useLogin();
+
   const onSubmit = (data) => {
-    console.log(data);
+    mutate(data);
   };
 
   return (
@@ -74,7 +85,7 @@ const Login = () => {
         >
           <Controller
             defaultValue={""}
-            name="username"
+            name="phone"
             control={control}
             rules={{
               required: "please enter valid phone",
@@ -95,11 +106,11 @@ const Login = () => {
                 }}
                 margin="normal"
                 fullWidth
-                placeholder="username"
-                autoComplete="username"
+                placeholder="phone"
+                autoComplete="phone"
                 autoFocus
-                helperText={errors?.username ? errors?.username?.message : ""}
-                error={errors?.username}
+                helperText={errors?.phone ? errors?.phone?.message : ""}
+                error={errors?.phone}
                 {...field}
               />
             )}
@@ -147,6 +158,7 @@ const Login = () => {
               type="submit"
               fullWidth
               size="large"
+              disabled={isLoading}
               sx={{
                 my: 3,
                 bgcolor: "primary.main",
@@ -155,6 +167,7 @@ const Login = () => {
                 },
                 color: "white",
               }}
+              endIcon={isLoading && <CircularProgress />}
             >
               Log In
             </Button>
