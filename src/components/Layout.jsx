@@ -13,6 +13,7 @@ import {
 import { Box, styled } from "@mui/system";
 import { Logout } from "@mui/icons-material";
 import { Outlet } from "react-router-dom";
+import { useAuth, useUser } from "../hooks/useAuth";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
@@ -43,6 +44,12 @@ export default function Layout() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const [user, setUser] = useAuth();
+
+  const handleLogOut = () => {
+    setUser(null);
+    localStorage.clear();
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -63,7 +70,7 @@ export default function Layout() {
             <Avatar
               //   sx={{ height: "auto" }}
               variant="circular"
-              src={window.localStorage.getItem("avatar")}
+              src={user?.user?.user_image[0]}
               alt={"Test"}
             />
           </IconButton>
@@ -106,8 +113,8 @@ export default function Layout() {
               <Avatar
                 sx={{ width: 72, height: "auto", mb: 2 }}
                 variant="square"
-                alt={"Amaklo"}
-                src={window.localStorage.getItem("avatar") || null}
+                alt={"Test"}
+                src={user?.user?.user_image[0]}
               />
               <Box>
                 <Typography
@@ -116,7 +123,7 @@ export default function Layout() {
                   }}
                   noWrap
                 >
-                  {window.localStorage.getItem("user")}
+                  {user?.user?.name}
                 </Typography>
                 <Typography
                   variant="caption"
@@ -127,7 +134,7 @@ export default function Layout() {
                   }}
                   noWrap
                 >
-                  {window.localStorage.getItem("email")}
+                  {user?.user?.phone}
                 </Typography>
               </Box>
             </Box>
@@ -145,10 +152,7 @@ export default function Layout() {
                 variant="contained"
                 sx={{ bgcolor: "status.danger", color: "#fff" }}
                 size="small"
-                onClick={() => {
-                  signOut();
-                  navigate("/login");
-                }}
+                onClick={handleLogOut}
                 startIcon={<Logout fontSize="small" />}
               >
                 Logout
