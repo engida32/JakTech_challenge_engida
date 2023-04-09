@@ -8,6 +8,7 @@ export const usePusher = (channelName, eventName) => {
   const pusher = useMemo(() => {
     return new Pusher(import.meta.env.VITE_PUSHER_APP_KEY, {
       cluster: import.meta.env.VITE_PUSHER_CLUSTER,
+      forceTLS: true,
     });
   }, []);
 
@@ -18,12 +19,16 @@ export const usePusher = (channelName, eventName) => {
   const sendMessage = async (message) => {
     try {
       const { data } = await axios.post(
-        `https://candidate.yewubetsalone.com/api/send-message`,
+        "https://candidate.yewubetsalone.com/api/send-message",
         {
           message,
         }
       );
+
       console.log("Data => ", data);
+      channel.bind("my-event", (event) => {
+        console.log("Event => ", event);
+      });
     } catch (error) {
       console.log("Error => ", error);
     }

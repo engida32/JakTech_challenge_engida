@@ -11,10 +11,9 @@ const PusherTest = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    sendMessage({
-      channel_name: "private-my-channel",
-      event_name: "my-event",
-      message,
+    sendMessage(message);
+    channel.bind("my-event", (data) => {
+      console.log("test", data.message);
     });
 
     setMessage("");
@@ -53,7 +52,8 @@ const PusherTest = () => {
           variant="contained"
           sx={{
             m: 2,
-            p: 1,
+            p: 2,
+            borderRadius: 2,
           }}
           // endIcon={<sendMessage />}
         >
@@ -68,18 +68,30 @@ const PusherTest = () => {
             display: "column",
             justifyContent: "center",
             alignItems: "center",
-            bgcolor: "whitesmoke",
+
+            p: 2,
           }}
         >
           {messages?.map((message, index) => (
-            <Box key={index}>
-              <Typography>{message}</Typography>
+            <Box
+              key={index}
+              sx={{ bgcolor: "whitesmoke", my: 1, p: 1, borderRadius: 3 }}
+            >
+              <Typography
+                sx={{
+                  color: "primary.main",
+                  fontWeight: 900,
+                  fontSize: 15,
+                }}
+              >
+                {message}
+              </Typography>
             </Box>
           ))}
           <br />
         </Box>
       ) : (
-        <Typography sx={{ width: "50%", mx: 20 }}>
+        <Typography sx={{ width: "50%", mx: 20, fontSize: " 23" }}>
           {" "}
           no message yet 🗨️ ! send Something from debug console
         </Typography>
