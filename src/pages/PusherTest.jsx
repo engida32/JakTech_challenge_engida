@@ -1,23 +1,21 @@
-// generate a simple form that sends data to Pusher and displays the response
-
 import React, { useState } from "react";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { usePusher } from "../hooks/usePusher";
-import {
-  ChatBubble,
-  ChatBubbleSharp,
-  Message,
-  SendToMobileSharp,
-} from "@mui/icons-material";
-
 const PusherTest = () => {
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("test");
 
-  const { sendMessage, messages } = usePusher("my-channel", "my-event");
+  const { sendMessage, messages, channel } = usePusher(
+    "my-channel",
+    "my-event"
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    sendMessage(message);
+    sendMessage({
+      channel_name: "private-my-channel",
+      event_name: "my-event",
+      message,
+    });
 
     setMessage("");
   };
@@ -26,6 +24,10 @@ const PusherTest = () => {
     <Container
       sx={{
         my: 10,
+        display: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "50%",
       }}
     >
       <Box
@@ -58,24 +60,30 @@ const PusherTest = () => {
           Send
         </Button>
       </Box>
-      <Box
-        sx={{
-          width: "100%",
-          mx: 30,
-          display: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {messages.map((message, index) => (
-          <>
+      {messages.length > 0 ? (
+        <Box
+          sx={{
+            width: "30%",
+            mx: 20,
+            display: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            bgcolor: "whitesmoke",
+          }}
+        >
+          {messages?.map((message, index) => (
             <Box key={index}>
               <Typography>{message}</Typography>
             </Box>
-            <br />
-          </>
-        ))}
-      </Box>
+          ))}
+          <br />
+        </Box>
+      ) : (
+        <Typography sx={{ width: "50%", mx: 20 }}>
+          {" "}
+          no message yet 🗨️ ! send Something from debug console
+        </Typography>
+      )}
     </Container>
   );
 };
