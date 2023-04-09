@@ -7,6 +7,7 @@ import {
   Card,
   CircularProgress,
   InputAdornment,
+  LinearProgress,
   TextField,
   Typography,
 } from "@mui/material";
@@ -167,10 +168,14 @@ const Login = () => {
                 },
                 color: "white",
               }}
-              endIcon={isLoading && <CircularProgress />}
+              endIcon={isLoading && <CircularProgress size={20} />}
             >
               Log In
             </Button>
+            {isLoading && <span> Logging in please a wait a moment !!</span>}
+            {isError && (
+              <Typography>Something Went Wrong please try again </Typography>
+            )}
           </Box>
         </Box>
       </Card>
